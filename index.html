@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BilimUp - O'rganishni boshlang</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f7fb;
+    color: #253044;
+}
+
+header {
+    background: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: #58cc02;
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 15px;
+}
+
+.welcome {
+    background: #58cc02;
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    margin-bottom: 12px;
+}
+
+.progress-box {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.progress {
+    background: #e8e8e8;
+    height: 13px;
+    border-radius: 20px;
+    margin-top: 12px;
+}
+
+.progress-bar {
+    background: #58cc02;
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    transition: .3s;
+}
+
+.lesson {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    border: 1px solid #eee;
+}
+
+.lesson h2 {
+    margin-bottom: 15px;
+}
+
+.question {
+    font-size: 21px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.answers {
+    display: grid;
+    gap: 12px;
+}
+
+.answer {
+    padding: 16px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.answer:hover {
+    border-color: #58cc02;
+}
+
+.answer.correct {
+    background: #dfffc9;
+    border-color: #58cc02;
+}
+
+.answer.wrong {
+    background: #ffe0e0;
+    border-color: #ff4b4b;
+}
+
+#result {
+    margin-top: 18px;
+    font-weight: bold;
+}
+
+.next {
+    background: #58cc02;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.next:hover {
+    background: #46a800;
+}
+
+.daily {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+}
+
+.daily h2 {
+    margin-bottom: 15px;
+}
+
+.daily-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+}
+
+@media(max-width:600px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .stats {
+        font-size: 14px;
+        gap: 12px;
+    }
+
+    .welcome h1 {
+        font-size: 23px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🦉 BilimUp</div>
+
+    <div class="stats">
+        <span>🔥 <span id="streak">1</span></span>
+        <span>⭐ <span id="points">0</span></span>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="progress-box">
+        <h3>📊 Bugungi natijangiz</h3>
+        <p id="progressText">0 / 5 ta savol bajarildi</p>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="lesson">
+        <h2>📚 Kunlik savollar</h2>
+
+        <div class="question" id="question">
+            Savol yuklanmoqda...
+        </div>
+
+        <div class="answers" id="answers"></div>
+
+        <div id="result"></div>
+
+        <button class="next" id="nextBtn" onclick="nextQuestion()" style="display:none">
+            Keyingi savol →
+        </button>
+    </div>
+
+    <div class="daily">
+        <h2>🎯 Kunlik vazifalar</h2>
+
+        <div class="daily-item">
+            <span>📖 5 ta savol yechish</span>
+            <b>+50 ⭐</b>
+        </div>
+
+        <div class="daily-item">
+            <span>🎯 Barcha savollarga javob berish</span>
+            <b>+20 ⭐</b>
+        </div>
+
+        <div class="daily-item">
+            <span>🔥 Har kuni o'rganish</span>
+            <b>+10 ⭐</b>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 BilimUp | Bilim olishni to'xtatmang!
+</footer>
+
+<script>
+const questions = [
+    {
+        q: "HTML nimaning qisqartmasi?",
+        a: ["Hyper Text Markup Language", "High Text Machine Language", "Home Tool Markup Language"],
+        correct: 0
+    },
+    {
+        q: "2 + 5 nechiga teng?",
+        a: ["6", "7", "8"],
+        correct: 1
+    },
+    {
+        q: "JavaScript nima uchun ishlatiladi?",
+        a: ["Faqat rasm chizish", "Saytga interaktivlik qo'shish", "Faqat matn yozish"],
+        correct: 1
+    },
+    {
+        q: "CSS nima vazifani bajaradi?",
+        a: ["Sayt dizaynini yaratadi", "Ma'lumot saqlaydi", "Internetni tezlashtiradi"],
+        correct: 0
+    },
+    {
+        q: "Dunyoning eng katta okeani qaysi?",
+        a: ["Atlantika", "Hind", "Tinch okeani"],
+        correct: 2
+    }
+];
+
+let current = 0;
+let points = Number(localStorage.getItem("points")) || 0;
+let completed = [];
+let answered = false;
+
+document.getElementById("points").innerText = points;
+
+function showQuestion() {
+    answered = false;
+
+    const q = questions[current];
+
+    document.getElementById("question").innerText =
+        (current + 1) + ". " + q.q;
+
+    document.getElementById("result").innerText = "";
+    document.getElementById("nextBtn").style.display = "none";
+
+    const answers = document.getElementById("answers");
+    answers.innerHTML = "";
+
+    q.a.forEach((answer, index) => {
+        const btn = document.createElement("button");
+
+        btn.className = "answer";
+        btn.innerText = answer;
+
+        btn.onclick = () => checkAnswer(index, btn);
+
+        answers.appendChild(btn);
+    });
+}
+
+function checkAnswer(index, btn) {
+    if (answered) return;
+
+    answered = true;
+
+    const q = questions[current];
+    const buttons = document.querySelectorAll(".answer");
+
+    buttons.forEach((b, i) => {
+        b.disabled = true;
+
+        if (i === q.correct) {
+            b.classList.add("correct");
+        }
+    });
+
+    if (index === q.correct) {
+        points += 10;
+
+        document.getElementById("result").innerText =
+            "🎉 To'g'ri! +10 ball";
+
+        localStorage.setItem("points", points);
+
+    } else {
+        btn.classList.add("wrong");
+
+        document.getElementById("result").innerText =
+            "❌ Noto'g'ri! To'g'ri javob yashil rangda.";
+    }
+
+    completed.push(current);
+
+    document.getElementById("points").innerText = points;
+
+    updateProgress();
+
+    document.getElementById("nextBtn").style.display = "block";
+}
+
+function updateProgress() {
+    let count = completed.length;
+
+    document.getElementById("progressText").innerText =
+        count + " / 5 ta savol bajarildi";
+
+    document.getElementById("progressBar").style.width =
+        (count / questions.length * 100) + "%";
+}
+
+function nextQuestion() {
+    current++;
+
+    if (current >= questions.length) {
+        document.querySelector(".lesson").innerHTML = `
+            <h2>🏆 Tabriklaymiz!</h2>
+            <p>Siz bugungi barcha savollarni bajardingiz!</p>
+            <h3 style="margin-top:20px">⭐ Jami ball: ${points}</h3>
+            <button class="next" onclick="location.reload()">
+                Qayta boshlash
+            </button>
+        `;
+
+        return;
+    }
+
+    showQuestion();
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
